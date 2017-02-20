@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Player} from "../entities/player";
+import {SocketService} from "../services/socket.service";
 
 @Component({
     selector: 'player',
@@ -13,13 +14,14 @@ import {Player} from "../entities/player";
 export class PlayerComponent {
     private player:Player;
 
-    constructor(){
-        this.player = new Player("asd");
+    constructor(private socket:SocketService){
+        this.player = new Player('', '');
     }
 
     move(event){
         if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){
             this.player.move(event.key);
+            this.socket.send('moved', event.key);
         }
     }
 }

@@ -7,6 +7,7 @@ import { AppComponent }     from './pages/app.component';
 import {HomeComponent} from "./pages/home.component";
 import {PlayerComponent} from "./components/player.component";
 import {SocketService} from "./services/socket.service";
+import {GuestPlayerComponent} from "./components/guest-player.component";
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import {SocketService} from "./services/socket.service";
             }
         ])
     ],
-    declarations: [ AppComponent, HomeComponent, PlayerComponent],
+    declarations: [ AppComponent, HomeComponent, PlayerComponent, GuestPlayerComponent],
     bootstrap:    [ AppComponent ],
     providers: [SocketService]
 })

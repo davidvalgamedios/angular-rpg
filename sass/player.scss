@@ -8,6 +8,23 @@
   background-repeat: no-repeat;
   background-size: contain;
 
+  &.blue{
+    filter: hue-rotate(100deg);
+  }
+
+  &.purple{
+    filter: hue-rotate(150deg);
+  }
+
+  &.red{
+    filter: hue-rotate(250deg);
+  }
+
+  &.yellow{
+    filter: hue-rotate(300deg);
+  }
+
+
   &.w{
     background-image: url("/dist/img/player/up.png");
   }

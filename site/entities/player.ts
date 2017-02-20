@@ -2,11 +2,13 @@ export class Player{
     private posX:number = 3;
     private posY:number = 5;
     private terrain;
-    private dir = 's';
-    private isMoving = false;
+    private dir:string = 's';
+    private isMoving:boolean = false;
+    private color:string;
 
 
-    constructor(terrain){
+    constructor(color, terrain){
+        this.color = color;
         this.terrain = terrain;
     }
 
@@ -19,6 +21,9 @@ export class Player{
     }
     getDir(){
         return this.dir;
+    }
+    getColor(){
+        return this.color;
     }
 
     move(dir){

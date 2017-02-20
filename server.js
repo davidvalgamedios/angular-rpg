@@ -36,8 +36,47 @@ app.get('/', function(req, res) {
 });
 
 
+
+var oPlayers = {};
+
 io.on('connection', function (socket) {
-    console.log("SomeoneConnected");
+    let myUuid = null;
+
+    socket.on('identify-me', function(playerUuid){
+        myUuid = playerUuid;
+
+        for(let sPlayerId in oPlayers){
+            oPlayers[sPlayerId].skt.emit('player-joined', myUuid);
+        }
+
+        oPlayers[myUuid] ={
+            id: myUuid,
+            skt: socket
+        };
+    });
+
+    socket.on('disconnect', function(){
+        delete(oPlayers[myUuid]);
+        for(let sPlayerId in oPlayers){
+            oPlayers[sPlayerId].skt.emit('player-disconnect', myUuid);
+        }
+    });
+
+    socket.on('moved', function(msg){
+        console.log("MOVED: "+msg);
+        for(let sPlayerId in oPlayers){
+            if(oPlayers[sPlayerId].id != myUuid){
+                oPlayers[sPlayerId].skt.emit('player-moved', {
+                    id: myUuid,
+                    dir: msg
+                });
+            }
+        }
+    });
+
+    /*setTimeout(() => {
+        socket.emit('player-moved', 'HOLA');
+    }, 1000);*/
 });
 
 server.listen(port);
