@@ -11,6 +11,9 @@ var server = http.createServer(app);
 //var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost:27017/Boilerplate');
 
+var io = require('socket.io').listen(server);
+
+
 if(env == 'prod'){
     app.use(compression());
 }
@@ -30,6 +33,11 @@ app.get('/', function(req, res) {
     res.render('index.ejs', {
         env: env
     });
+});
+
+
+io.on('connection', function (socket) {
+    console.log("SomeoneConnected");
 });
 
 server.listen(port);

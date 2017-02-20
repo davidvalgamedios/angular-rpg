@@ -6,6 +6,7 @@ import { RouterModule }     from '@angular/router';
 import { AppComponent }     from './pages/app.component';
 import {HomeComponent} from "./pages/home.component";
 import {PlayerComponent} from "./components/player.component";
+import {SocketService} from "./services/socket.service";
 
 
 @NgModule({
@@ -22,6 +23,6 @@ import {PlayerComponent} from "./components/player.component";
     ],
     declarations: [ AppComponent, HomeComponent, PlayerComponent],
     bootstrap:    [ AppComponent ],
-    providers: []
+    providers: [SocketService]
 })
 export class AppModule {}

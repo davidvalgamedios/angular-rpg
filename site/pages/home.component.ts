@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {SocketService} from "../services/socket.service";
 
 @Component({
     selector: 'home',
@@ -10,7 +11,7 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
-    constructor(){
+    constructor(private socket:SocketService){
     }
 
 }
