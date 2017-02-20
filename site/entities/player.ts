@@ -2,7 +2,7 @@ export class Player{
     private posX:number = 3;
     private posY:number = 5;
     private terrain;
-    private dir = 'd';
+    private dir = 's';
     private isMoving = false;
 
 
@@ -17,9 +17,13 @@ export class Player{
     getY(){
         return this.posY*50+'px';
     }
+    getDir(){
+        return this.dir;
+    }
 
     move(dir){
         if(!this.isMoving && this.canGo(dir)){
+            this.dir = dir;
             if(dir == 'w'){
                 this.posX--;
             }

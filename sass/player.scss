@@ -3,6 +3,21 @@
   width: 50px;
   height: 50px;
   position: absolute;
-  background-color: black;
   transition: top  0.25s linear, left 0.25s linear;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  &.w{
+    background-image: url("/dist/img/player/up.png");
+  }
+  &.s{
+    background-image: url("/dist/img/player/down.png");
+  }
+  &.a{
+    background-image: url("/dist/img/player/left.png");
+  }
+  &.d{
+    background-image: url("/dist/img/player/right.png");
+  }
 }

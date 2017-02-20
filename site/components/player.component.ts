@@ -6,7 +6,8 @@ import {Player} from "../entities/player";
     template: `
         <div class="player" (window:keydown)="move($event)"
             [style.top]="player.getX()"
-            [style.left]="player.getY()"></div>
+            [style.left]="player.getY()"
+            [ngClass]="player.getDir()"></div>
     `
 })
 export class PlayerComponent {
