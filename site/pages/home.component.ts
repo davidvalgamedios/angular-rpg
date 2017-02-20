@@ -12,31 +12,35 @@ import {Player} from "../entities/player";
     `
 })
 export class HomeComponent {
-    private playersMovesObs;
-    private newPlayersObs;
-    private disconnectPlayerObs;
-
     private guestsList:Player[] = [];
     private guestsIds = {};
 
     constructor(private socketService:SocketService){
-        this.playersMovesObs = this.socketService.getPlayersMoves().subscribe(
+        this.socketService.getPlayersMoves().subscribe(
             msg => {
                 this.guestsIds[msg.id].setDir(msg.pos.x, msg.pos.y, msg.pos.dir)
             }
         );
-
-        this.newPlayersObs = this.socketService.getPlayersJoined().subscribe(
+        this.socketService.getPlayersJoined().subscribe(
             msg => {
                 let oGuest = new Player('red', '', null);
                 this.guestsList.push(oGuest);
                 this.guestsIds[msg] = oGuest;
             }
         );
-        this.disconnectPlayerObs = this.socketService.getPlayersDisconected().subscribe(
+        this.socketService.getPlayersDisconected().subscribe(
             msg => {
                 this.guestsList = [];
                 delete(this.guestsIds[msg]);
+            }
+        );
+        this.socketService.getOnInitPlayers().subscribe(
+            list => {
+                for(let sId of list){
+                    let oGuest = new Player('red', '', null);
+                    this.guestsList.push(oGuest);
+                    this.guestsIds[sId] = oGuest;
+                }
             }
         );
     }

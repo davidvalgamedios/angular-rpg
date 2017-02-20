@@ -64,14 +64,17 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('moved', function(msg){
+    socket.on('moved', function(pos){
         for(let sPlayerId in oPlayers){
             if(oPlayers[sPlayerId].id != myUuid){
                 oPlayers[sPlayerId].skt.emit('player-moved', {
                     id: myUuid,
-                    pos: msg
+                    pos: pos
                 });
             }
+            /*else{
+                oPlayers[sPlayerId].pos = pos;
+            }*/
         }
     });
 

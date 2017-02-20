@@ -1,9 +1,7 @@
 import * as io from 'socket.io-client';
 import { UUID } from 'angular2-uuid';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -12,13 +10,15 @@ import { Observable } from 'rxjs/Observable';
 export class SocketService {
     private socketUrl = '/';
     private myUuid:string;
+
+    //Observables
     private playersMovesObs;
     private newPlayersObs;
     private disconnectPlayerObs;
+    private onInitPlayersObs;
+    //Observables
 
     private socket;
-
-    private playersOnInit;
 
 
     constructor(){
@@ -34,8 +34,11 @@ export class SocketService {
         this.socket = io(this.socketUrl);
 
         this.socket.emit('identify-me', this.myUuid);
-        this.socket.on('current-players', (data) => {
 
+        this.onInitPlayersObs = new Observable(observer => {
+            this.socket.on('current-players', (list) => {
+                observer.next(list);
+            });
         });
 
         this.playersMovesObs = new Observable(observer => {
@@ -63,6 +66,9 @@ export class SocketService {
     }
     getPlayersDisconected(){
         return this.disconnectPlayerObs;
+    }
+    getOnInitPlayers(){
+        return this.onInitPlayersObs;
     }
 
     send(action:string, msg:any){
