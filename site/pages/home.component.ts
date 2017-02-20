@@ -14,6 +14,7 @@ import {Player} from "../entities/player";
 export class HomeComponent {
     private guestsList:Player[] = [];
     private guestsIds = {};
+    private colors = ['red', 'blue', 'yellow', 'purple'];
 
     constructor(private socketService:SocketService){
         this.socketService.getPlayersMoves().subscribe(
@@ -23,21 +24,21 @@ export class HomeComponent {
         );
         this.socketService.getPlayersJoined().subscribe(
             msg => {
-                let oGuest = new Player('red', '', null);
+                let oGuest = new Player(this.getColor(), '', null);
                 this.guestsList.push(oGuest);
                 this.guestsIds[msg] = oGuest;
             }
         );
         this.socketService.getPlayersDisconected().subscribe(
             msg => {
-                this.guestsList = [];
+                this.guestsList = []; // TODO: Change to delete only one. Need to store ID
                 delete(this.guestsIds[msg]);
             }
         );
         this.socketService.getOnInitPlayers().subscribe(
             list => {
                 for(let sId of list){
-                    let oGuest = new Player('red', '', null);
+                    let oGuest = new Player(this.getColor(), '', null);
                     this.guestsList.push(oGuest);
                     this.guestsIds[sId] = oGuest;
                 }
@@ -45,4 +46,8 @@ export class HomeComponent {
         );
     }
 
+
+    private getColor(){
+        return this.colors[(this.guestsList.length)];
+    }
 }
