@@ -14,14 +14,13 @@ import {SocketService} from "../services/socket.service";
 export class PlayerComponent {
     private player:Player;
 
-    constructor(private socket:SocketService){
-        this.player = new Player('', '');
+    constructor(private socketService:SocketService){
+        this.player = new Player('', '', socketService);
     }
 
     move(event){
         if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){
             this.player.move(event.key);
-            this.socket.send('moved', event.key);
         }
     }
 }

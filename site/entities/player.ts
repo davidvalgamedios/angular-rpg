@@ -1,3 +1,4 @@
+import {SocketService} from "../services/socket.service";
 export class Player{
     private posX:number = 3;
     private posY:number = 5;
@@ -7,7 +8,7 @@ export class Player{
     private color:string;
 
 
-    constructor(color, terrain){
+    constructor(color, terrain, private socketService:SocketService){
         this.color = color;
         this.terrain = terrain;
     }
@@ -42,11 +43,20 @@ export class Player{
                 this.posY++;
             }
             this.isMoving = true;
+            if(this.socketService != null){
+                this.socketService.send('moved', {x: this.posX, y: this.posY, dir: dir});
+            }
 
             setTimeout(() => {
                 this.isMoving = false;
             }, 250)
         }
+    }
+
+    setDir(x, y, dir){
+        this.posX = x;
+        this.posY = y;
+        this.dir = dir;
     }
 
 

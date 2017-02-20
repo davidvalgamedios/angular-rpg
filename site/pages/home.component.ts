@@ -22,13 +22,13 @@ export class HomeComponent {
     constructor(private socketService:SocketService){
         this.playersMovesObs = this.socketService.getPlayersMoves().subscribe(
             msg => {
-                this.guestsIds[msg.id].move(msg.dir)
+                this.guestsIds[msg.id].setDir(msg.pos.x, msg.pos.y, msg.pos.dir)
             }
         );
 
         this.newPlayersObs = this.socketService.getPlayersJoined().subscribe(
             msg => {
-                let oGuest = new Player('red', '');
+                let oGuest = new Player('red', '', null);
                 this.guestsList.push(oGuest);
                 this.guestsIds[msg] = oGuest;
             }

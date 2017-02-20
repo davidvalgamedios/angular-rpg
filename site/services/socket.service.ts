@@ -18,6 +18,9 @@ export class SocketService {
 
     private socket;
 
+    private playersOnInit;
+
+
     constructor(){
         let savedUuid = localStorage.getItem('savedUuid');
         if(savedUuid){
@@ -29,7 +32,11 @@ export class SocketService {
         }
 
         this.socket = io(this.socketUrl);
+
         this.socket.emit('identify-me', this.myUuid);
+        this.socket.on('current-players', (data) => {
+
+        });
 
         this.playersMovesObs = new Observable(observer => {
            this.socket.on('player-moved', (data) => {
@@ -58,7 +65,7 @@ export class SocketService {
         return this.disconnectPlayerObs;
     }
 
-    send(action:string, msg:string){
+    send(action:string, msg:any){
         this.socket.emit(action, msg);
     }
 

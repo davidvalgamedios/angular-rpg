@@ -14,7 +14,5 @@ import {SocketService} from "../services/socket.service";
 export class GuestPlayerComponent {
     @Input() player:Player;
 
-    constructor(private socket:SocketService){
-        this.player = new Player('red', '');
-    }
+    constructor(private socket:SocketService){}
 }

@@ -49,7 +49,9 @@ io.on('connection', function (socket) {
             oPlayers[sPlayerId].skt.emit('player-joined', myUuid);
         }
 
-        oPlayers[myUuid] ={
+        socket.emit('current-players', Object.keys(oPlayers));
+
+        oPlayers[myUuid] = {
             id: myUuid,
             skt: socket
         };
@@ -63,12 +65,11 @@ io.on('connection', function (socket) {
     });
 
     socket.on('moved', function(msg){
-        console.log("MOVED: "+msg);
         for(let sPlayerId in oPlayers){
             if(oPlayers[sPlayerId].id != myUuid){
                 oPlayers[sPlayerId].skt.emit('player-moved', {
                     id: myUuid,
-                    dir: msg
+                    pos: msg
                 });
             }
         }
