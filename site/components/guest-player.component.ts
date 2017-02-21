@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import {Player} from "../entities/player";
-import {SocketService} from "../services/socket.service";
 
 @Component({
     selector: 'guest-player',
@@ -14,5 +13,5 @@ import {SocketService} from "../services/socket.service";
 export class GuestPlayerComponent {
     @Input() player:Player;
 
-    constructor(private socket:SocketService){}
+    constructor(){}
 }

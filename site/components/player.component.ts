@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Player} from "../entities/player";
-import {SocketService} from "../services/socket.service";
 
 @Component({
     selector: 'player',
@@ -8,15 +7,13 @@ import {SocketService} from "../services/socket.service";
         <div class="player" (window:keydown)="move($event)"
             [style.top]="player.getX()"
             [style.left]="player.getY()"
-            [ngClass]="player.getDir()"></div>
+            [ngClass]="[player.getDir(), player.getColor()]"></div>
     `
 })
 export class PlayerComponent {
-    private player:Player;
+    @Input() player:Player;
 
-    constructor(private socketService:SocketService){
-        this.player = new Player('', '', socketService);
-    }
+    constructor(){}
 
     move(event){
         if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){

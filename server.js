@@ -36,8 +36,38 @@ app.get('/', function(req, res) {
 });
 
 
+/*
+{
+    id: '550e8400-e29b-41d4-a716-446655440000'
+    color: 'green',
+    pos: {
+        x: 1,
+        y: 2,
+        dir: 's'
+    },
+    skt: Socket()
+}
 
-var oPlayers = {};
+*/
+let oPlayers = {};
+let oPlayersSockets = {};
+
+let colorList = ['green', 'red', 'blue', 'yellow', 'purple'];
+function getColor(){
+    let remaining = JSON.parse(JSON.stringify(colorList));
+
+    for(let sPlayerId in oPlayers){
+        let nIndex = remaining.indexOf(oPlayers[sPlayerId].color);
+        if(nIndex != -1){
+            remaining.splice(nIndex, 1);
+        }
+    }
+
+    if(remaining.length > 0){
+        return remaining[0];
+    }
+    return '';
+}
 
 io.on('connection', function (socket) {
     let myUuid = null;
@@ -45,29 +75,39 @@ io.on('connection', function (socket) {
     socket.on('identify-me', function(playerUuid){
         myUuid = playerUuid;
 
+        let oNewPlayerData = {
+            id: myUuid,
+            color: getColor(),
+            pos: {
+                x: 0,
+                y: 0,
+                dir: 's'
+            }
+        };
+
         for(let sPlayerId in oPlayers){
-            oPlayers[sPlayerId].skt.emit('player-joined', myUuid);
+            oPlayersSockets[sPlayerId].emit('player-joined', oNewPlayerData);
         }
 
-        socket.emit('current-players', Object.keys(oPlayers));
+        socket.emit('current-players', {list: oPlayers, yourColor: oNewPlayerData.color});
 
-        oPlayers[myUuid] = {
-            id: myUuid,
-            skt: socket
-        };
+        oPlayers[myUuid] = oNewPlayerData;
+        oPlayersSockets[myUuid] = socket;
     });
 
     socket.on('disconnect', function(){
         delete(oPlayers[myUuid]);
-        for(let sPlayerId in oPlayers){
-            oPlayers[sPlayerId].skt.emit('player-disconnect', myUuid);
+        delete(oPlayersSockets[myUuid]);
+
+        for(let sPlayerId in oPlayersSockets){
+            oPlayersSockets[sPlayerId].emit('player-disconnect', myUuid);
         }
     });
 
     socket.on('moved', function(pos){
         for(let sPlayerId in oPlayers){
             if(oPlayers[sPlayerId].id != myUuid){
-                oPlayers[sPlayerId].skt.emit('player-moved', {
+                oPlayersSockets[sPlayerId].emit('player-moved', {
                     id: myUuid,
                     pos: pos
                 });

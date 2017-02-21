@@ -1,14 +1,16 @@
 import {SocketService} from "../services/socket.service";
 export class Player{
-    private posX:number = 3;
-    private posY:number = 5;
+    private uuid:string;
+    private posX:number = 0;
+    private posY:number = 0;
     private terrain;
     private dir:string = 's';
     private isMoving:boolean = false;
     private color:string;
 
 
-    constructor(color, terrain, private socketService:SocketService){
+    constructor(uuid, color, terrain, private socketService:SocketService){
+        this.uuid = uuid;
         this.color = color;
         this.terrain = terrain;
     }
@@ -25,6 +27,9 @@ export class Player{
     }
     getColor(){
         return this.color;
+    }
+    getId(){
+        return this.uuid;
     }
 
     move(dir){
