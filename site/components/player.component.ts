@@ -4,7 +4,9 @@ import {Player} from "../entities/player";
 @Component({
     selector: 'player',
     template: `
-        <div class="player" (window:keydown)="isKeyPress($event)" (window:keyup)="isKeyDown($event)"
+        <div class="player" 
+        (window:keydown)="isKeyPress($event)"
+        (window:keyup)="isKeyDown()"
             [style.top]="player.getX()"
             [style.left]="player.getY()"
             [ngClass]="[player.getDir(), player.getColor()]"></div>
@@ -12,12 +14,12 @@ import {Player} from "../entities/player";
 })
 export class PlayerComponent {
     @Input() player:Player;
-    private intervalObj = null;
+    private intervalObj:any|null = null;
     private movingDir:string|null;
 
     constructor(){}
 
-    isKeyPress(event){
+    isKeyPress(event:any){
         if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){
             if(event.key != this.movingDir){
                 this.isKeyDown();

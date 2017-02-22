@@ -12,16 +12,16 @@ import {Player} from "../entities/player";
     `
 })
 export class HomeComponent{
-    private ownPlayer:Player;
-    private guestsList:Player[] = [];
+    ownPlayer:Player;
+    guestsList:Player[] = [];
     private guestsIds = {};
 
     constructor(private socketService:SocketService){
         //Player list received
         this.socketService.getOnInitPlayers().subscribe(
             res => {
-                for(let playerId in res.list){
-                    let oPlayerData = res.list[playerId];
+                for(let playerId in res['list']){
+                    let oPlayerData = res['list'][playerId];
                     let oGuest = new Player(playerId,oPlayerData.color,'', null);
                     oGuest.setDir(oPlayerData.pos.x, oPlayerData.pos.y, oPlayerData.pos.dir);
 
@@ -34,17 +34,17 @@ export class HomeComponent{
         //Player movements
         this.socketService.getPlayersMoves().subscribe(
             msg => {
-                this.guestsIds[msg.id].setDir(msg.pos.x, msg.pos.y, msg.pos.dir)
+                this.guestsIds[msg['id']].setDir(msg['pos'].x, msg['pos'].y, msg['pos'].dir)
             }
         );
         //New Player Joined
         this.socketService.getPlayersJoined().subscribe(
             newPlayer => {
-                let oGuest = new Player(newPlayer.id, newPlayer.color, '', null);
-                oGuest.setDir(newPlayer.pos.x, newPlayer.pos.y, newPlayer.pos.dir);
+                let oGuest = new Player(newPlayer['id'], newPlayer['color'], '', null);
+                oGuest.setDir(newPlayer['pos'].x, newPlayer['pos'].y, newPlayer['pos'].dir);
 
                 this.guestsList.push(oGuest);
-                this.guestsIds[newPlayer.id] = oGuest;
+                this.guestsIds[newPlayer['id']] = oGuest;
             }
         );
         //Player disconnected

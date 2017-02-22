@@ -12,13 +12,13 @@ export class SocketService {
     private myUuid:string;
 
     //Observables
-    private playersMovesObs;
-    private newPlayersObs;
-    private disconnectPlayerObs;
-    private onInitPlayersObs;
+    private playersMovesObs:Observable<string>;
+    private newPlayersObs:Observable<string>;
+    private disconnectPlayerObs:Observable<string>;
+    private onInitPlayersObs:Observable<string>;
     //Observables
 
-    private socket;
+    private socket:any;
 
 
     constructor(){
@@ -35,24 +35,24 @@ export class SocketService {
 
         this.socket.emit('identify-me', this.myUuid);
 
-        this.onInitPlayersObs = new Observable(observer => {
-            this.socket.on('current-players', (list) => {
+        this.onInitPlayersObs = new Observable((observer:any) => {
+            this.socket.on('current-players', (list:any) => {
                 observer.next(list);
             });
         });
 
-        this.playersMovesObs = new Observable(observer => {
-           this.socket.on('player-moved', (data) => {
+        this.playersMovesObs = new Observable((observer:any) => {
+           this.socket.on('player-moved', (data:any) => {
                observer.next(data);
            });
         });
-        this.newPlayersObs = new Observable(observer => {
-            this.socket.on('player-joined', (data) => {
+        this.newPlayersObs = new Observable((observer:any) => {
+            this.socket.on('player-joined', (data:any) => {
                 observer.next(data);
             });
         });
-        this.disconnectPlayerObs = new Observable(observer => {
-            this.socket.on('player-disconnect', (data) => {
+        this.disconnectPlayerObs = new Observable((observer:any) => {
+            this.socket.on('player-disconnect', (data:any) => {
                 observer.next(data);
             });
         })

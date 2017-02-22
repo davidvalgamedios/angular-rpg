@@ -3,36 +3,36 @@ export class Player{
     private uuid:string;
     private posX:number = 0;
     private posY:number = 0;
-    private terrain;
+    private terrain:string;
     private dir:string = 's';
     private isMoving:boolean = false;
     private color:string;
 
 
-    constructor(uuid, color, terrain, private socketService:SocketService){
+    constructor(uuid:string, color:string, terrain:string, private socketService:SocketService){
         this.uuid = uuid;
         this.color = color;
         this.terrain = terrain;
     }
 
     //Getters
-    getX(){
+    getX():string{
         return this.posX*50+'px';
     }
-    getY(){
+    getY():string{
         return this.posY*50+'px';
     }
-    getDir(){
+    getDir():string{
         return this.dir;
     }
-    getColor(){
+    getColor():string{
         return this.color;
     }
-    getId(){
+    getId():string{
         return this.uuid;
     }
 
-    move(dir){
+    move(dir:string):void{
         if(!this.isMoving && this.canGo(dir)){
             this.dir = dir;
             if(dir == 'w'){
@@ -58,7 +58,7 @@ export class Player{
         }
     }
 
-    setDir(x, y, dir){
+    setDir(x:number, y:number, dir:string):void{
         this.posX = x;
         this.posY = y;
         this.dir = dir;
@@ -66,7 +66,7 @@ export class Player{
 
 
     //private
-    canGo(dir){
+    canGo(dir:string):boolean{
         if(dir == 'w'){
             return this.posX>0;
         }
