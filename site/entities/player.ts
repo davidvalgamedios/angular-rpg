@@ -8,6 +8,8 @@ export class Player{
     private isMoving:boolean = false;
     private color:string;
 
+    private isAttaking:boolean;
+
 
     constructor(uuid:string, color:string, terrain:string, private socketService:SocketService){
         this.uuid = uuid;
@@ -56,6 +58,9 @@ export class Player{
                 this.isMoving = false;
             }, 250)
         }
+    }
+    attack(){
+
     }
 
     setDir(x:number, y:number, dir:string):void{

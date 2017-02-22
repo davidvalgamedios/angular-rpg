@@ -37,4 +37,62 @@
   &.d{
     background-image: url("/dist/img/player/right.png");
   }
+
+  .swordC{
+    position: relative;
+    width: 18%;
+    height: 180%;
+    top: -40%;
+    left: 42%;
+    transition:transform 0.15s;
+    display: none;
+
+    &.atk{
+      display: block;
+    }
+
+    div{
+      background-color: black;
+      height: 37%;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  &.s{
+    .swordC{
+      transform: rotate(-90deg);
+      &.swing{
+        transform: rotate(0deg);
+      }
+    }
+  }
+
+  &.d{
+    .swordC{
+      transform: rotate(-180deg);
+      &.swing{
+        transform: rotate(-90deg);
+      }
+    }
+  }
+
+  &.a{
+    .swordC{
+      transform: rotate(180deg);
+      &.swing{
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  &.w{
+    .swordC{
+      transform: rotate(90deg);
+      &.swing{
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
