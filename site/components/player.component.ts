@@ -12,7 +12,6 @@ import {Player} from "../entities/player";
 })
 export class PlayerComponent {
     @Input() player:Player;
-    private isMoving:boolean;
     private intervalObj = null;
     private movingDir:string|null;
 
