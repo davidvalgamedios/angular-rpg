@@ -28,7 +28,7 @@ export class PlayerComponent {
     constructor(){}
 
     isKeyPress(event:any){
-        if(this.intervalObj == null){//With this is avoided multiple calls
+        if(this.intervalObj == null){//With this multiple calls are avoided
             if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){
                 if(event.key != this.movingDir){
                     this.setKeyDown();
