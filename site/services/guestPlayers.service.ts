@@ -10,6 +10,7 @@ export class GuestPlayersService {
     private guestsIds = {};
 
     constructor(private socketService:SocketService){
+        console.info("CONSTRUCT GUEST PLAYERS SERVICE");
         //Player list received
         this.socketService.getOnInitPlayers().subscribe(
             res => {

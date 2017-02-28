@@ -4,6 +4,7 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class TerrainsService {
+
     private terrains:any = {
         main: {
             sizeW: 9,
@@ -12,14 +13,14 @@ export class TerrainsService {
             exits: [
                 {
                     dir: 'u',
-                    posX: 0,
-                    posY: 4,
+                    x: 0,
+                    y: 4,
                     goTo: 'dungeon'
                 },
                 {
                     dir: 'r',
-                    posX: 4,
-                    posY: 9,
+                    x: 4,
+                    y: 9,
                     goTo: 'dungeon2'
                 }
             ]
@@ -27,6 +28,7 @@ export class TerrainsService {
     };
 
     constructor(){
+        console.info("CONSTRUCT TERRAIN SERVICE");
     }
 
     getTerrain(terrainId:string){
@@ -34,7 +36,7 @@ export class TerrainsService {
             return this.terrains[terrainId];
         }
         else{
-            console.info("Terrain not found");
+            //console.info("Terrain not found");
             return this.terrains.main;
         }
     }

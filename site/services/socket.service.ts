@@ -23,6 +23,7 @@ export class SocketService {
 
 
     constructor(){
+        console.info("CONSTRUCT SOCKET SERVICE");
         let savedUuid = localStorage.getItem('savedUuid');
         if(savedUuid){
             this.myUuid = savedUuid;
