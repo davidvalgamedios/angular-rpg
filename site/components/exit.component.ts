@@ -5,8 +5,8 @@ import {Player} from "../entities/player";
     selector: 'exit',
     template: `
         <div class="exit" 
-            [style.top]="exCfg.posX*50+'px'"
-            [style.left]="exCfg.posY*50+'px'"
+            [style.top]="exCfg.x*50+'px'"
+            [style.left]="exCfg.y*50+'px'"
             [ngClass]="exCfg.dir">
         </div>
     `

@@ -5,7 +5,7 @@ export class Player{
     posY:number = 0;
     private terrain:string;
     private dir:string = 's';
-    private isMoving:boolean = false;
+    isMoving:boolean = false;
     private color:string;
 
     private isAttaking:boolean;
