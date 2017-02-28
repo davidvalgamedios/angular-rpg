@@ -9,7 +9,7 @@ import { SocketService } from "../services/socket.service";
     selector: 'home',
     template: `
         <div class="terrain" [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'">
-            <player *ngIf="ownPlayer" [player]="ownPlayer"></player>
+            <player *ngIf="ownPlayer" [player]="ownPlayer" [terrainCfg]="terrainConfig"></player>
             <guest-player *ngFor="let oPlayer of guestsList" [player]="oPlayer"></guest-player>
             <exit *ngFor="let oExit of terrainConfig.exits" [exCfg]="oExit"></exit>
         </div>

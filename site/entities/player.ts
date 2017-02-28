@@ -1,8 +1,8 @@
 import {SocketService} from "../services/socket.service";
 export class Player{
     private uuid:string;
-    private posX:number = 0;
-    private posY:number = 0;
+    posX:number = 0;
+    posY:number = 0;
     private terrain:string;
     private dir:string = 's';
     private isMoving:boolean = false;
@@ -35,7 +35,7 @@ export class Player{
     }
 
     move(dir:string):void{
-        if(!this.isMoving && this.canGo(dir)){
+        if(!this.isMoving){
             this.dir = dir;
             if(dir == 'w'){
                 this.posX--;
@@ -67,23 +67,5 @@ export class Player{
         this.posX = x;
         this.posY = y;
         this.dir = dir;
-    }
-
-
-    //private
-    canGo(dir:string):boolean{
-        if(dir == 'w'){
-            return this.posX>0;
-        }
-        else if(dir == 's'){
-            return this.posX<9;
-        }
-        else if(dir == 'a'){
-            return this.posY>0;
-        }
-        else if(dir == 'd'){
-            return this.posY<9;
-        }
-        else return false;
     }
 }

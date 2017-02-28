@@ -6,8 +6,8 @@ import 'rxjs/add/operator/toPromise';
 export class TerrainsService {
     private terrains:any = {
         main: {
-            sizeW: 10,
-            sizeH: 10,
+            sizeW: 9,
+            sizeH: 9,
             background: 'grass.jpg',
             exits: [
                 {
