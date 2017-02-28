@@ -106,6 +106,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on('moved', function(pos){
+        if(oPlayers.hasOwnProperty(myUuid)){
+            oPlayers[myUuid].pos = pos;
+        }
         for(let sPlayerId in oPlayers){
             if(oPlayers[sPlayerId].id != myUuid){
                 oPlayersSockets[sPlayerId].emit('player-moved', {
