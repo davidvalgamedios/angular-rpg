@@ -10,6 +10,7 @@ import { SocketService } from "./services/socket.service";
 import { GuestPlayerComponent } from "./components/guest-player.component";
 import { TerrainsService } from "./services/terrains.service";
 import { GuestPlayersService } from "./services/guestPlayers.service";
+import { ExitComponent } from "./components/exit.component";
 
 
 @NgModule({
@@ -28,7 +29,7 @@ import { GuestPlayersService } from "./services/guestPlayers.service";
             }
         ])
     ],
-    declarations: [ AppComponent, TerrainComponent, PlayerComponent, GuestPlayerComponent],
+    declarations: [ AppComponent, TerrainComponent, PlayerComponent, GuestPlayerComponent, ExitComponent],
     bootstrap:    [ AppComponent ],
     providers: [ SocketService, TerrainsService, GuestPlayersService ]
 })

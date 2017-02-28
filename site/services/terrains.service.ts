@@ -11,11 +11,13 @@ export class TerrainsService {
             background: 'grass.jpg',
             exits: [
                 {
+                    dir: 'u',
                     posX: 0,
                     posY: 4,
                     dest: 'dungeon'
                 },
                 {
+                    dir: 'r',
                     posX: 4,
                     posY: 9,
                     dest: 'dungeon2'
