@@ -34,7 +34,7 @@ export class Player{
         return this.uuid;
     }
 
-    move(dir:string):void{
+    move(dir:string):void{//Unused
         if(!this.isMoving){
             this.dir = dir;
             if(dir == 'w'){
