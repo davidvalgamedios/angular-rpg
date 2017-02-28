@@ -1,19 +1,12 @@
-import { Component } from '@angular/core';
-import {SocketService} from "../services/socket.service";
-import {Player} from "../entities/player";
+import { Injectable } from '@angular/core';
+import { Player } from "../entities/player";
+import 'rxjs/add/operator/toPromise';
+import { SocketService } from "./socket.service";
 
-@Component({
-    selector: 'home',
-    template: `
-        <div class="terrain">
-            <player *ngIf="ownPlayer" [player]="ownPlayer"></player>
-            <guest-player *ngFor="let oPlayer of guestsList" [player]="oPlayer"></guest-player>
-        </div>
-    `
-})
-export class HomeComponent{
-    ownPlayer:Player;
-    guestsList:Player[] = [];
+
+@Injectable()
+export class GuestPlayersService {
+    private guestsList:Player[] = [];
     private guestsIds = {};
 
     constructor(private socketService:SocketService){
@@ -28,7 +21,7 @@ export class HomeComponent{
                     this.guestsList.push(oGuest);
                     this.guestsIds[playerId] = oGuest;
                 }
-                this.ownPlayer = new Player('me', res['yourColor'], '', this.socketService);
+                //this.ownPlayer = new Player('me', res['yourColor'], '', this.socketService);
             }
         );
         //Player movements
@@ -59,5 +52,9 @@ export class HomeComponent{
                 delete(this.guestsIds[uuid]);
             }
         );
+    }
+
+    getGuestPlayers(){
+        return this.guestsList;
     }
 }

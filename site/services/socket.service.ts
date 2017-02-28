@@ -16,6 +16,7 @@ export class SocketService {
     private newPlayersObs:Observable<string>;
     private disconnectPlayerObs:Observable<string>;
     private onInitPlayersObs:Observable<string>;
+    private ownPlayerInfoObs:Observable<string>;
     //Observables
 
     private socket:any;
@@ -37,6 +38,12 @@ export class SocketService {
 
         this.onInitPlayersObs = new Observable((observer:any) => {
             this.socket.on('current-players', (list:any) => {
+                observer.next(list);
+            });
+        });
+
+        this.ownPlayerInfoObs = new Observable((observer:any) => {
+            this.socket.on('own-player-info', (list:any) => {
                 observer.next(list);
             });
         });
@@ -69,6 +76,9 @@ export class SocketService {
     }
     getOnInitPlayers(){
         return this.onInitPlayersObs;
+    }
+    getOwnPlayerInfo(){
+        return this.ownPlayerInfoObs;
     }
 
     send(action:string, msg:any){

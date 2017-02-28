@@ -29,7 +29,7 @@ app.use(bodyParser()); // get information from html forms
 app.use("/build", express.static(__dirname + '/build'));
 
 
-app.get('/', function(req, res) {
+app.get(['/', '/room/*'], function(req, res) {
     res.render('index.ejs', {
         env: env
     });
@@ -89,7 +89,8 @@ io.on('connection', function (socket) {
             oPlayersSockets[sPlayerId].emit('player-joined', oNewPlayerData);
         }
 
-        socket.emit('current-players', {list: oPlayers, yourColor: oNewPlayerData.color});
+        socket.emit('current-players', {list: oPlayers});
+        socket.emit('own-player-info', {yourColor: oNewPlayerData.color});
 
         oPlayers[myUuid] = oNewPlayerData;
         oPlayersSockets[myUuid] = socket;

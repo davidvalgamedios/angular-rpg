@@ -1,29 +1,35 @@
 import { NgModule }         from '@angular/core';
 import { BrowserModule }    from '@angular/platform-browser';
-//import { HttpModule }       from '@angular/http';
+import { HttpModule }       from '@angular/http';
 import { RouterModule }     from '@angular/router';
 
 import { AppComponent }     from './pages/app.component';
-import {HomeComponent} from "./pages/home.component";
-import {PlayerComponent} from "./components/player.component";
-import {SocketService} from "./services/socket.service";
-import {GuestPlayerComponent} from "./components/guest-player.component";
+import { TerrainComponent } from "./pages/terrain.component";
+import { PlayerComponent } from "./components/player.component";
+import { SocketService } from "./services/socket.service";
+import { GuestPlayerComponent } from "./components/guest-player.component";
+import { TerrainsService } from "./services/terrains.service";
+import { GuestPlayersService } from "./services/guestPlayers.service";
 
 
 @NgModule({
     imports: [
         BrowserModule,
         //FormsModule,
-        //HttpModule,
+        HttpModule,
         RouterModule.forRoot([
             {
+                path: 'room/:terrainId',
+                component: TerrainComponent
+            },
+            {
                 path: '',
-                component: HomeComponent
+                component: TerrainComponent
             }
         ])
     ],
-    declarations: [ AppComponent, HomeComponent, PlayerComponent, GuestPlayerComponent],
+    declarations: [ AppComponent, TerrainComponent, PlayerComponent, GuestPlayerComponent],
     bootstrap:    [ AppComponent ],
-    providers: [SocketService]
+    providers: [ SocketService, TerrainsService, GuestPlayersService ]
 })
 export class AppModule {}
