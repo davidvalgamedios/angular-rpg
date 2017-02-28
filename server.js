@@ -116,15 +116,8 @@ io.on('connection', function (socket) {
                     pos: pos
                 });
             }
-            /*else{
-                oPlayers[sPlayerId].pos = pos;
-            }*/
         }
     });
-
-    /*setTimeout(() => {
-        socket.emit('player-moved', 'HOLA');
-    }, 1000);*/
 });
 
 server.listen(port);
