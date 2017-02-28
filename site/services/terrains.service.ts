@@ -14,13 +14,13 @@ export class TerrainsService {
                     dir: 'u',
                     posX: 0,
                     posY: 4,
-                    dest: 'dungeon'
+                    goTo: 'dungeon'
                 },
                 {
                     dir: 'r',
                     posX: 4,
                     posY: 9,
-                    dest: 'dungeon2'
+                    goTo: 'dungeon2'
                 }
             ]
         }
