@@ -63,6 +63,24 @@ export class Player{
 
     }
 
+    setPlayerDir(x:number, y:number, dir:string):void{
+        if(!this.isMoving){
+            this.isMoving = true;
+
+            this.posX = x;
+            this.posY = y;
+            this.dir = dir;
+
+            if(this.socketService != null){
+                this.socketService.send('moved', {x: this.posX, y: this.posY, dir: dir});
+            }
+
+            setTimeout(() => {
+                this.isMoving = false;
+            }, 250)
+        }
+    }
+
     setDir(x:number, y:number, dir:string):void{
         this.posX = x;
         this.posY = y;

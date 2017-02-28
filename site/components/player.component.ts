@@ -61,7 +61,9 @@ export class PlayerComponent {
 
     sendMovement(){
         if(this.canIGo(this.movingDir)){
-            this.player.move(this.movingDir);
+            let nextX = this.player.posX+(this.movingDir=='s'?1:(this.movingDir=='w'?-1:0));
+            let nextY = this.player.posY+(this.movingDir=='d'?1:(this.movingDir=='a'?-1:0));
+            this.player.setPlayerDir(nextX, nextY, this.movingDir);
         }
     }
 
@@ -79,5 +81,9 @@ export class PlayerComponent {
             return this.player.posY<this.terrainCfg.sizeW;
         }
         else return false;
+    }
+
+    willBeExit(dir:string){
+
     }
 }
