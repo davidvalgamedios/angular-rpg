@@ -71,7 +71,7 @@ export class PlayerComponent {
                     action: 'changeRoom',
                     to: roomExit.goTo.id
                 });
-                this.player.setPlayerDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
+                this.player.setDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
             }
             else{
                 this.player.setPlayerDir(nextX, nextY, this.movingDir);
