@@ -1,7 +1,7 @@
 .terrain{
-  margin: 25px auto;
   background-image: url("/dist/img/backgrounds/unknown.jpg");
   width: 500px;
   height: 500px;
   position: relative;
+  transition: bottom  0.25s linear, right 0.25s linear;
 }

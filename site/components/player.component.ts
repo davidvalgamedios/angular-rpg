@@ -7,8 +7,6 @@ import { Player } from "../entities/player";
         <div class="player" 
         (window:keydown)="isKeyPress($event)"
         (window:keyup)="setKeyUp()"
-            [style.top]="player.getX()"
-            [style.left]="player.getY()"
             [ngClass]="[player.getDir(), player.getColor()]">
             <div class="swordC" [ngClass]="{'atk':isAttacking,'swing':swingSword}">
                 <div></div>

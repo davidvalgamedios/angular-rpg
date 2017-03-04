@@ -8,18 +8,24 @@ import { SocketService } from "../services/socket.service";
 @Component({
     selector: 'home',
     template: `
-        <div class="terrain"
-        [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'"
-        [style.width]="(terrainConfig.sizeW+1)*50+'px'"
-        [style.height]="(terrainConfig.sizeH+1)*50+'px'">
+        <div class="referencePoint" *ngIf="ownPlayer !== null">
+            <div class="terrain"
+                [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'"
+                [style.width]="(terrainConfig.sizeW+1)*50+'px'"
+                [style.height]="(terrainConfig.sizeH+1)*50+'px'"
+                [style.bottom]="ownPlayer.getX()"
+                [style.right]="ownPlayer.getY()">
+                <exit *ngFor="let oExit of terrainConfig.exits"
+                    [exCfg]="oExit"
+                ></exit>
+                <guest-player *ngFor="let oPlayer of guestsList" [player]="oPlayer"></guest-player>
+            </div>
             <player (playerActions)="parseAction($event)" *ngIf="ownPlayer" [player]="ownPlayer" [terrainCfg]="terrainConfig"></player>
-            <guest-player *ngFor="let oPlayer of guestsList" [player]="oPlayer"></guest-player>
-            <exit *ngFor="let oExit of terrainConfig.exits" [exCfg]="oExit"></exit>
         </div>
     `
 })
 export class TerrainComponent implements OnInit{
-    ownPlayer:Player;
+    ownPlayer:Player = null;
     guestsList:Player[] = [];
 
     terrainConfig:any;
