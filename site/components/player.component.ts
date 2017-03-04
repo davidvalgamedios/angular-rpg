@@ -95,7 +95,6 @@ export class PlayerComponent {
     }
 
     willBeExit(dir:string){
-        console.log("test");
         for(let exit of this.terrainCfg.exits){
             if(exit.x == this.player.posX && exit.y == this.player.posY && exit.dir == dir){
                 return exit;
