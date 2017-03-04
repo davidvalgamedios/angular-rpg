@@ -62,20 +62,19 @@ export class PlayerComponent {
     }
 
     sendMovement(){
-        if(this.canIGo(this.movingDir)){
-            let nextX = this.player.posX+(this.movingDir=='s'?1:(this.movingDir=='w'?-1:0));
-            let nextY = this.player.posY+(this.movingDir=='d'?1:(this.movingDir=='a'?-1:0));
-            let roomExit = this.willBeExit(nextX, nextY);
-            if(roomExit != null){
-                this.playerActions.emit({
-                    action: 'changeRoom',
-                    to: roomExit.goTo.id
-                });
-                this.player.setDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
-            }
-            else{
-                this.player.setPlayerDir(nextX, nextY, this.movingDir);
-            }
+        let nextX = this.player.posX+(this.movingDir=='s'?1:(this.movingDir=='w'?-1:0));
+        let nextY = this.player.posY+(this.movingDir=='d'?1:(this.movingDir=='a'?-1:0));
+        let roomExit = this.willBeExit(this.movingDir);
+        if(roomExit != null){
+            this.playerActions.emit({
+                action: 'changeRoom',
+                to: roomExit.goTo.id
+            });
+            this.player.setDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
+        }
+
+        else if(this.canIGo(this.movingDir)){
+            this.player.setPlayerDir(nextX, nextY, this.movingDir);
         }
     }
 
@@ -95,9 +94,10 @@ export class PlayerComponent {
         else return false;
     }
 
-    willBeExit(x:number, y:number){
+    willBeExit(dir:string){
+        console.log("test");
         for(let exit of this.terrainCfg.exits){
-            if(exit.x == x && exit.y == y){
+            if(exit.x == this.player.posX && exit.y == this.player.posY && exit.dir == dir){
                 return exit;
             }
         }
