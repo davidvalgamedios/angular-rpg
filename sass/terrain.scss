@@ -4,4 +4,8 @@
   height: 500px;
   position: relative;
   transition: bottom  0.25s linear, right 0.25s linear;
+
+  &.change{
+    transition: none;
+  }
 }

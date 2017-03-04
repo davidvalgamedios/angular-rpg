@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Player } from "../entities/player";
-import { ActivatedRoute, Params }   from '@angular/router';
+import {ActivatedRoute, Params, Router}   from '@angular/router';
 import { TerrainsService } from "../services/terrains.service";
 import { GuestPlayersService } from "../services/guestPlayers.service";
 import { SocketService } from "../services/socket.service";
@@ -10,6 +10,7 @@ import { SocketService } from "../services/socket.service";
     template: `
         <div class="referencePoint" *ngIf="ownPlayer !== null">
             <div class="terrain"
+                [ngClass]="{'change':isChangingRoom}"
                 [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'"
                 [style.width]="(terrainConfig.sizeW+1)*50+'px'"
                 [style.height]="(terrainConfig.sizeH+1)*50+'px'"
@@ -27,13 +28,15 @@ import { SocketService } from "../services/socket.service";
 export class TerrainComponent implements OnInit{
     ownPlayer:Player = null;
     guestsList:Player[] = [];
+    isChangingRoom:boolean = false;
 
     terrainConfig:any;
 
     constructor(private route: ActivatedRoute,
                 private terrainService:TerrainsService,
                 private guestPlayersService:GuestPlayersService,
-                private socketService:SocketService){
+                private socketService:SocketService,
+                private router:Router){
         this.guestsList = guestPlayersService.getGuestPlayers();
 
         this.socketService.getOwnPlayerInfo().subscribe(
@@ -51,6 +54,16 @@ export class TerrainComponent implements OnInit{
     }
 
     parseAction(action:any){
-        this.terrainConfig = this.terrainService.getTerrain(action.to);
+        console.log("ParseAction");
+        this.isChangingRoom = true;
+        setTimeout(()=>{
+            this.router.navigateByUrl('/room/'+action.to).then(()=>{
+                setTimeout(()=>{
+                    console.log("Timeout");
+                    this.isChangingRoom = false
+                }, 10);
+            });
+        }, 10);
+        //this.terrainConfig = this.terrainService.getTerrain(action.to);
     }
 }
