@@ -77,6 +77,14 @@ export class GuestPlayersService {
         else if(action == 'disconnect'){
             this.removePlayer(data);
         }
+        else if(action == 'leave-room'){
+            this.removePlayer(data.id);
+        }
+        else if(action == 'enter-room'){
+            let oPlayer = new Player(data.id, data.color, '', null);
+            oPlayer.setDir(data.pos.x, data.pos.y, data.pos.dir);
+            this.addPlayer(oPlayer);
+        }
     }
 
 
