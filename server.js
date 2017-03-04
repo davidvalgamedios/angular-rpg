@@ -36,6 +36,14 @@ app.get(['/', '/room/*'], function(req, res) {
 });
 
 
+let oRooms = {};
+/*
+    main: {
+        players: {}
+    }
+*/
+
+//let oPlayers = {};
 /*
 {
     id: '550e8400-e29b-41d4-a716-446655440000'
@@ -45,37 +53,30 @@ app.get(['/', '/room/*'], function(req, res) {
         y: 2,
         dir: 's'
     },
+    room: 'dungeon',
     skt: Socket()
 }
 
 */
-let oPlayers = {};
 let oPlayersSockets = {};
 
 let colorList = ['green', 'red', 'blue', 'yellow', 'purple'];
 function getColor(){
-    let remaining = JSON.parse(JSON.stringify(colorList));
+    let index = Math.floor(Math.random()* 6);
 
-    for(let sPlayerId in oPlayers){
-        let nIndex = remaining.indexOf(oPlayers[sPlayerId].color);
-        if(nIndex != -1){
-            remaining.splice(nIndex, 1);
-        }
-    }
-
-    if(remaining.length > 0){
-        return remaining[0];
-    }
-    return '';
+    return colorList[index];
 }
 
 io.on('connection', function (socket) {
     let myUuid = null;
+    let actualRoom = null;
+    let playerData = null;
 
-    socket.on('identify-me', function(playerUuid){
-        myUuid = playerUuid;
+    socket.on('identify-me', function(data){
+        myUuid = data.myId;
+        actualRoom = getRoomData(actualRoom);
 
-        let oNewPlayerData = {
+        playerData = {
             id: myUuid,
             color: getColor(),
             pos: {
@@ -85,19 +86,21 @@ io.on('connection', function (socket) {
             }
         };
 
-        for(let sPlayerId in oPlayers){
-            oPlayersSockets[sPlayerId].emit('player-joined', oNewPlayerData);
+        for(let sPlayerId in actualRoom.players){
+            oPlayersSockets[sPlayerId].emit('player-joined', playerData);
         }
 
-        socket.emit('current-players', {list: oPlayers});
-        socket.emit('own-player-info', {yourColor: oNewPlayerData.color});
+        socket.emit('current-players', {list: actualRoom.players});
+        socket.emit('own-player-info', {yourColor: playerData.color});
 
-        oPlayers[myUuid] = oNewPlayerData;
+        actualRoom.players[myUuid] = playerData;
         oPlayersSockets[myUuid] = socket;
     });
 
     socket.on('disconnect', function(){
-        delete(oPlayers[myUuid]);
+        if(actualRoom){
+            delete(actualRoom.players[myUuid]);
+        }
         delete(oPlayersSockets[myUuid]);
 
         for(let sPlayerId in oPlayersSockets){
@@ -106,11 +109,11 @@ io.on('connection', function (socket) {
     });
 
     socket.on('moved', function(pos){
-        if(oPlayers.hasOwnProperty(myUuid)){
-            oPlayers[myUuid].pos = pos;
+        if(actualRoom.players.hasOwnProperty(myUuid)){
+            actualRoom.players[myUuid].pos = pos;
         }
-        for(let sPlayerId in oPlayers){
-            if(oPlayers[sPlayerId].id != myUuid){
+        for(let sPlayerId in actualRoom.players){
+            if(actualRoom.players[sPlayerId].id != myUuid){
                 oPlayersSockets[sPlayerId].emit('player-moved', {
                     id: myUuid,
                     pos: pos
@@ -118,7 +121,35 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    socket.on('roomChanged', function(data){
+        if(actualRoom){
+            delete(actualRoom.players[myUuid]);
+
+            for(let sPlayerId in actualRoom.players){
+                oPlayersSockets[sPlayerId].emit('player-leave-room', {
+                    id: myUuid
+                });
+            }
+        }
+        actualRoom = getRoomData(data.id);
+        for(let sPlayerId in actualRoom.players){
+            oPlayersSockets[sPlayerId].emit('player-enter-room', playerData);
+        }
+        actualRoom.players[myUuid] = playerData;
+    });
 });
 
 server.listen(port);
 console.log("Listening on: "+port);
+
+
+
+function getRoomData(sRoomId){
+    if(!oRooms.hasOwnProperty(sRoomId)){
+        oRooms[sRoomId] = {
+            players: {}
+        }
+    }
+    return oRooms[sRoomId];
+}

@@ -12,11 +12,8 @@ export class SocketService {
     private myUuid:string;
 
     //Observables
-    private playersMovesObs:Observable<string>;
-    private newPlayersObs:Observable<string>;
-    private disconnectPlayerObs:Observable<string>;
-    private onInitPlayersObs:Observable<string>;
     private ownPlayerInfoObs:Observable<string>;
+    private guestChangesObs:Observable<any>;
     //Observables
 
     private socket:any;
@@ -24,23 +21,27 @@ export class SocketService {
 
     constructor(){
         console.info("CONSTRUCT SOCKET SERVICE");
-        let savedUuid = localStorage.getItem('savedUuid');
-        if(savedUuid){
-            this.myUuid = savedUuid;
-        }
-        else{
-            this.myUuid = UUID.UUID();
-            localStorage.setItem('savedUuid', this.myUuid);
-        }
 
         this.socket = io(this.socketUrl);
 
-        this.socket.emit('identify-me', this.myUuid);
-
-        this.onInitPlayersObs = new Observable((observer:any) => {
-            this.socket.on('current-players', (list:any) => {
-                observer.next(list);
-                observer.complete();
+        this.guestChangesObs = new Observable((observer:any) => {
+            this.socket.on('current-players', (data:any) => {
+                observer.next({action:'current-players', data:data});
+            });
+            this.socket.on('player-moved', (data:any) => {
+                observer.next({action:'moved', data:data});
+            });
+            this.socket.on('player-joined', (data:any) => {
+                observer.next({action:'joined', data:data});
+            });
+            this.socket.on('player-disconnect', (data:any) => {
+                observer.next({action:'disconnect', data:data});
+            });
+            this.socket.on('player-enter-room', (data:any) => {
+                observer.next({action:'enter-room', data:data});
+            });
+            this.socket.on('player-leave-room', (data:any) => {
+                observer.next({action:'leave-room', data:data});
             });
         });
 
@@ -50,35 +51,23 @@ export class SocketService {
                 observer.complete();
             });
         });
-
-        this.playersMovesObs = new Observable((observer:any) => {
-           this.socket.on('player-moved', (data:any) => {
-               observer.next(data);
-           });
-        });
-        this.newPlayersObs = new Observable((observer:any) => {
-            this.socket.on('player-joined', (data:any) => {
-                observer.next(data);
-            });
-        });
-        this.disconnectPlayerObs = new Observable((observer:any) => {
-            this.socket.on('player-disconnect', (data:any) => {
-                observer.next(data);
-            });
-        })
     }
 
-    getPlayersMoves(){
-        return this.playersMovesObs;
+    initialize(roomId:string){
+        let savedUuid = localStorage.getItem('savedUuid');
+        if(savedUuid){
+            this.myUuid = savedUuid;
+        }
+        else{
+            this.myUuid = UUID.UUID();
+            localStorage.setItem('savedUuid', this.myUuid);
+        }
+
+        this.socket.emit('identify-me', {myId:this.myUuid,roomId:roomId});
     }
-    getPlayersJoined(){
-        return this.newPlayersObs;
-    }
-    getPlayersDisconected(){
-        return this.disconnectPlayerObs;
-    }
-    getOnInitPlayers(){
-        return this.onInitPlayersObs;
+
+    getGuestChanges(){
+        return this.guestChangesObs;
     }
     getOwnPlayerInfo(){
         return this.ownPlayerInfoObs;

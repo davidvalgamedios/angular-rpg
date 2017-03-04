@@ -47,20 +47,24 @@ export class TerrainComponent implements OnInit{
     }
 
     ngOnInit(): void{
+        let terrainId = '';
         this.route.params.forEach((params: Params) => {
-            let terrainId = params['terrainId'];
+            terrainId = params['terrainId'];
             this.terrainConfig = this.terrainService.getTerrain(terrainId);
         });
+
+        this.socketService.initialize(terrainId);
     }
 
     parseAction(action:any){
         this.isChangingRoom = true;
         setTimeout(()=>{
-            this.router.navigateByUrl('/room/'+action.to).then(()=>{
+            this.router.navigateByUrl('/room/'+action.to.id).then(()=>{
                 setTimeout(()=>{
                     this.isChangingRoom = false
                 }, 10);
             });
+            this.socketService.send('roomChanged', action.to);
         }, 10);
         //this.terrainConfig = this.terrainService.getTerrain(action.to);
     }

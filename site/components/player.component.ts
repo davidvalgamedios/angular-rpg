@@ -5,6 +5,7 @@ import { Player } from "../entities/player";
     selector: 'player',
     template: `
         <div class="player" 
+        *ngIf="player !== null"
         (window:keydown)="isKeyPress($event)"
         (window:keyup)="setKeyUp()"
             [ngClass]="[player.getDir(), player.getColor()]">
@@ -15,7 +16,7 @@ import { Player } from "../entities/player";
     `
 })
 export class PlayerComponent {
-    @Input() player:Player;
+    @Input() player:Player = null;
     @Input() terrainCfg:any;
     @Output() playerActions: EventEmitter<any> = new EventEmitter<any>();
 
@@ -66,7 +67,7 @@ export class PlayerComponent {
         if(roomExit != null){
             this.playerActions.emit({
                 action: 'changeRoom',
-                to: roomExit.goTo.id
+                to: roomExit.goTo
             });
             this.player.setDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
         }
