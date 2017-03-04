@@ -62,6 +62,12 @@ export class GuestPlayersService {
         return this.guestsList;
     }
 
+    changingRoom(){
+        //TODO: Clean this in the same object
+        this.guestsList = [];
+        this.guestsIds = {};
+    }
+
     parseGuestChange(action:string,data:any){
         if(action == 'current-players'){
             this.addFirstUsers(data.list);

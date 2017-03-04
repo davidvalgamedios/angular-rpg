@@ -39,11 +39,18 @@ app.get(['/', '/room/*'], function(req, res) {
 let oRooms = {};
 /*
     main: {
-        players: {}
+        players: {
+            '550e8400-e29b-41d4-a716-446655440000':{...}
+        }
+    },
+    dungeon:{
+        players: {
+            '550e8400-e29b-41d4-a716-446655440000':{...}
+        }
     }
 */
 
-//let oPlayers = {};
+let oPlayersList = {};
 /*
 {
     id: '550e8400-e29b-41d4-a716-446655440000'
@@ -56,9 +63,9 @@ let oRooms = {};
     room: 'dungeon',
     skt: Socket()
 }
-
 */
 let oPlayersSockets = {};
+
 
 let colorList = ['green', 'red', 'blue', 'yellow', 'purple'];
 function getColor(){
@@ -74,7 +81,7 @@ io.on('connection', function (socket) {
 
     socket.on('identify-me', function(data){
         myUuid = data.myId;
-        actualRoom = getRoomData(actualRoom);
+        actualRoom = getRoomData(data.roomId);
 
         playerData = {
             id: myUuid,
@@ -86,13 +93,15 @@ io.on('connection', function (socket) {
             }
         };
 
+        socket.emit('own-player-info', {yourColor: playerData.color});
+
         for(let sPlayerId in actualRoom.players){
-            oPlayersSockets[sPlayerId].emit('player-joined', playerData);
+            if(oPlayersSockets.hasOwnProperty(sPlayerId)){
+                oPlayersSockets[sPlayerId].emit('player-joined', playerData);
+            }
         }
 
         socket.emit('current-players', {list: actualRoom.players});
-        socket.emit('own-player-info', {yourColor: playerData.color});
-
         actualRoom.players[myUuid] = playerData;
         oPlayersSockets[myUuid] = socket;
     });
@@ -100,12 +109,12 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function(){
         if(actualRoom){
             delete(actualRoom.players[myUuid]);
+
+            for(let sPlayerId in actualRoom.players){
+                oPlayersSockets[sPlayerId].emit('player-disconnect', myUuid);
+            }
         }
         delete(oPlayersSockets[myUuid]);
-
-        for(let sPlayerId in oPlayersSockets){
-            oPlayersSockets[sPlayerId].emit('player-disconnect', myUuid);
-        }
     });
 
     socket.on('moved', function(pos){
@@ -123,6 +132,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on('roomChanged', function(data){
+        playerData.pos.x = data.x;
+        playerData.pos.y = data.y;
+
         if(actualRoom){
             delete(actualRoom.players[myUuid]);
 
@@ -136,6 +148,7 @@ io.on('connection', function (socket) {
         for(let sPlayerId in actualRoom.players){
             oPlayersSockets[sPlayerId].emit('player-enter-room', playerData);
         }
+        socket.emit('current-players', {list: actualRoom.players});
         actualRoom.players[myUuid] = playerData;
     });
 });
@@ -147,6 +160,7 @@ console.log("Listening on: "+port);
 
 function getRoomData(sRoomId){
     if(!oRooms.hasOwnProperty(sRoomId)){
+        console.log("Room created: "+sRoomId);
         oRooms[sRoomId] = {
             players: {}
         }

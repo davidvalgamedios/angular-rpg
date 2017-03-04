@@ -58,6 +58,7 @@ export class TerrainComponent implements OnInit{
 
     parseAction(action:any){
         this.isChangingRoom = true;
+        this.guestPlayersService.changingRoom();
         setTimeout(()=>{
             this.router.navigateByUrl('/room/'+action.to.id).then(()=>{
                 setTimeout(()=>{
