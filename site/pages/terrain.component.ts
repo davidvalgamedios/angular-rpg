@@ -54,12 +54,10 @@ export class TerrainComponent implements OnInit{
     }
 
     parseAction(action:any){
-        console.log("ParseAction");
         this.isChangingRoom = true;
         setTimeout(()=>{
             this.router.navigateByUrl('/room/'+action.to).then(()=>{
                 setTimeout(()=>{
-                    console.log("Timeout");
                     this.isChangingRoom = false
                 }, 10);
             });
