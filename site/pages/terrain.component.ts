@@ -8,8 +8,11 @@ import { SocketService } from "../services/socket.service";
 @Component({
     selector: 'home',
     template: `
-        <div class="terrain" [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'">
-            <player *ngIf="ownPlayer" [player]="ownPlayer" [terrainCfg]="terrainConfig"></player>
+        <div class="terrain"
+        [style.background-image]="'url(/dist/img/backgrounds/'+terrainConfig.background+')'"
+        [style.width]="(terrainConfig.sizeW+1)*50+'px'"
+        [style.height]="(terrainConfig.sizeH+1)*50+'px'">
+            <player (playerActions)="parseAction($event)" *ngIf="ownPlayer" [player]="ownPlayer" [terrainCfg]="terrainConfig"></player>
             <guest-player *ngFor="let oPlayer of guestsList" [player]="oPlayer"></guest-player>
             <exit *ngFor="let oExit of terrainConfig.exits" [exCfg]="oExit"></exit>
         </div>
@@ -39,5 +42,9 @@ export class TerrainComponent implements OnInit{
             let terrainId = params['terrainId'];
             this.terrainConfig = this.terrainService.getTerrain(terrainId);
         });
+    }
+
+    parseAction(action:any){
+        this.terrainConfig = this.terrainService.getTerrain(action.to);
     }
 }

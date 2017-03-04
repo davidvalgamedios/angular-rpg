@@ -12,16 +12,31 @@ export class TerrainsService {
             background: 'grass.jpg',
             exits: [
                 {
-                    dir: 'u',
-                    x: 0,
-                    y: 4,
-                    goTo: 'dungeon'
-                },
-                {
-                    dir: 'r',
+                    dir: 'a',
                     x: 4,
-                    y: 9,
-                    goTo: 'dungeon2'
+                    y: 0,
+                    goTo: {
+                        id: 'dungeon',
+                        x: 5,
+                        y: 7
+                    }
+                }
+            ]
+        },
+        dungeon: {
+            sizeW: 7,
+            sizeH: 7,
+            background: 'dungeon.png',
+            exits: [
+                {
+                    dir: 'd',
+                    x: 5,
+                    y: 7,
+                    goTo: {
+                        id: 'main',
+                        x: 4,
+                        y: 0
+                    }
                 }
             ]
         }

@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {Player} from "../entities/player";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Player } from "../entities/player";
 
 @Component({
     selector: 'player',
@@ -19,6 +19,7 @@ import {Player} from "../entities/player";
 export class PlayerComponent {
     @Input() player:Player;
     @Input() terrainCfg:any;
+    @Output() playerActions: EventEmitter<any> = new EventEmitter<any>();
 
     private intervalObj:any|null = null;
     private isMoving:boolean = false;
@@ -66,9 +67,15 @@ export class PlayerComponent {
             let nextY = this.player.posY+(this.movingDir=='d'?1:(this.movingDir=='a'?-1:0));
             let roomExit = this.willBeExit(nextX, nextY);
             if(roomExit != null){
-                console.log("EXITING");
+                this.playerActions.emit({
+                    action: 'changeRoom',
+                    to: roomExit.goTo.id
+                });
+                this.player.setPlayerDir(roomExit.goTo.x, roomExit.goTo.y, roomExit.dir);
             }
-            this.player.setPlayerDir(nextX, nextY, this.movingDir);
+            else{
+                this.player.setPlayerDir(nextX, nextY, this.movingDir);
+            }
         }
     }
 
@@ -91,7 +98,7 @@ export class PlayerComponent {
     willBeExit(x:number, y:number){
         for(let exit of this.terrainCfg.exits){
             if(exit.x == x && exit.y == y){
-                return exit.goTo;
+                return exit;
             }
         }
         return null;

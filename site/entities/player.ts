@@ -54,6 +54,7 @@ export class Player{
     }
 
     setPlayerDir(x:number, y:number, dir:string):void{
+        console.log(x, y, dir);
         this.posX = x;
         this.posY = y;
         this.dir = dir;

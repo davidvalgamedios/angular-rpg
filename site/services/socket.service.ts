@@ -40,12 +40,14 @@ export class SocketService {
         this.onInitPlayersObs = new Observable((observer:any) => {
             this.socket.on('current-players', (list:any) => {
                 observer.next(list);
+                observer.complete();
             });
         });
 
         this.ownPlayerInfoObs = new Observable((observer:any) => {
             this.socket.on('own-player-info', (list:any) => {
                 observer.next(list);
+                observer.complete();
             });
         });
 
