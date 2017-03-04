@@ -6,13 +6,13 @@ import {Player} from "../entities/player";
     template: `
         <div class="player" 
         (window:keydown)="isKeyPress($event)"
-        (window:keyup)="setKeyDown()"
+        (window:keyup)="setKeyUp()"
             [style.top]="player.getX()"
             [style.left]="player.getY()"
             [ngClass]="[player.getDir(), player.getColor()]">
             <div class="swordC" [ngClass]="{'atk':isAttacking,'swing':swingSword}">
                 <div></div>
-            </div>    
+            </div>
         </div>
     `
 })
@@ -21,26 +21,27 @@ export class PlayerComponent {
     @Input() terrainCfg:any;
 
     private intervalObj:any|null = null;
+    private isMoving:boolean = false;
     private movingDir:string|null;
+
     private isAttacking:boolean;
     private swingSword:boolean;
 
     constructor(){}
 
     isKeyPress(event:any){
-        if(this.intervalObj == null){//With this multiple calls are avoided
+        if(!this.isMoving || event.key != this.movingDir){
             if(event.key == 'w' || event.key == 'a' || event.key == 's' || event.key == 'd'){
                 if(event.key != this.movingDir){
-                    this.setKeyDown();
                     this.movingDir = event.key;
                 }
-                if(!this.intervalObj){
+                if(this.intervalObj === null){
                     this.sendMovement();
-                    this.intervalObj = setInterval(() => {this.sendMovement()}, 25);
+                    this.intervalObj = setInterval(() => {this.sendMovement()}, 250);
                 }
+                this.isMoving = true;
             }
-
-            if(event.key === ' '){
+            else if(event.key === ' '){
                 this.isAttacking = true;
                 setTimeout(()=>{this.isAttacking=false}, 225);
                 setTimeout(()=>{
@@ -52,14 +53,15 @@ export class PlayerComponent {
         }
     }
 
-    setKeyDown(){
+    setKeyUp(){
+        this.isMoving = false;
         this.movingDir = null;
         clearInterval(this.intervalObj);
         this.intervalObj = null;
     }
 
     sendMovement(){
-        if(!this.player.isMoving && this.canIGo(this.movingDir)){
+        if(this.canIGo(this.movingDir)){
             let nextX = this.player.posX+(this.movingDir=='s'?1:(this.movingDir=='w'?-1:0));
             let nextY = this.player.posY+(this.movingDir=='d'?1:(this.movingDir=='a'?-1:0));
             let roomExit = this.willBeExit(nextX, nextY);
