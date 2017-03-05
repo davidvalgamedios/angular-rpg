@@ -63,9 +63,10 @@ export class GuestPlayersService {
     }
 
     changingRoom(){
-        //TODO: Clean this in the same object
-        this.guestsList = [];
-        this.guestsIds = {};
+        for(let sGuestId in this.guestsIds){
+            delete(this.guestsIds[sGuestId]);
+        }
+        this.guestsList.length = 0;
     }
 
     parseGuestChange(action:string,data:any){
